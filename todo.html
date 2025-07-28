@@ -11,7 +11,11 @@
 
     <div class="container">
       <h1>Javascript Todo App</h1>
-      
+
+      <br>
+
+      <button class="btn btn-sm btn-primary" onclick="sortTodosByDeadline()">Sort by deadline</button>
+
       <div class="row mt-4">
         <div class="col-md-8">
           <ul id="todo-list">
@@ -190,6 +194,27 @@
             todoElement.innerHTML = json_temp[todoID].title;
           }
         }
+      }
+
+      function sortTodosByDeadline() {
+        let json_temp = JSON.parse(localStorage.getItem("json_data"))
+        if (!json_temp) return
+
+        // Remove null entries
+        json_temp = json_temp.filter(todo => todo)
+
+        // Sort array
+        json_temp.sort((a, b) => {
+          return new Date(a.deadline) - new Date(b.deadline)
+        })
+
+        localStorage.setItem("json_data", JSON.stringify(json_temp))
+
+        // Re-render todo list
+        document.getElementById("todo-list").innerHTML = ""
+        json_temp.forEach((todo) => {
+          newTodo(todo.title, todo.description, todo.deadline, todo.id)
+        })
       }
     </script>
   </body>
